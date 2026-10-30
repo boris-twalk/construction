@@ -1,0 +1,4 @@
+import type { Chart, Configuration, Plan } from '../domain/engineering';
+export const configuration:Configuration={modelId:'TEST-AT-001',counterweightKg:20000,outriggerSpanMm:7200,boomLengthMm:30000,sector:'360',attachments:'主鉤；無副臂',support:'OUTRIGGERS',craneType:'ALL_TERRAIN'};
+export const demoChart:Chart={id:'fictional-chart-1',configuration,documentVersion:'TEST-v1',page:'測試第 1 頁',source:'虛構測試資料，非原廠文件',verifiedBy:'測試核對人（虛構）',verifiedAt:'2026-01-01T00:00:00Z',approved:true,fictional:true,manufacturer:true,notes:['全部數值均為虛構，禁止用於實際吊裝','測試假設：鉤組與吊具列入總吊重；扣減值必須明確輸入'],notesAcknowledged:true,revision:1,entries:[{radiusMm:8000,capacityKg:16000},{radiusMm:10000,capacityKg:12000},{radiusMm:12000,capacityKg:9000},{radiusMm:14000,capacityKg:null},{radiusMm:16000,capacityKg:null,prohibited:true}]};
+export const demoPlan:Plan={id:'DEMO-001',title:'示範吊裝計畫（虛構）',revision:1,status:'DRAFT',checkedRevision:null,chartRevision:null,payload:{}};
