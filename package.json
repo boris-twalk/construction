@@ -6,10 +6,17 @@
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "tsc -b && vite build",
-    "test": "vitest run && node server/review.test.mjs",
+    "test": "npm run test:engineering && npm run test:db && npm run test:api",
     "db:init": "node scripts/init-db.mjs",
-    "review:server": "python3 scripts/render-review-pages.py && node server/index.mjs",
-    "review:prepare": "node scripts/prepare-review.mjs && python3 scripts/render-review-pages.py"
+    "review:server": "node server/start-review.mjs",
+    "review:prepare": "node scripts/prepare-review.mjs && python3 scripts/render-review-pages.py",
+    "test:engineering": "vitest run",
+    "test:db": "node tests/review-db.test.mjs",
+    "test:api": "node tests/review-api.test.mjs",
+    "test:private": "node scripts/test-private.mjs",
+    "typecheck": "tsc -b --pretty false",
+    "review:demo": "REVIEW_DATA_MODE=synthetic node server/start-review.mjs",
+    "review:render": "python3 scripts/render-review-pages.py"
   },
   "dependencies": {
     "react": "^19.0.0",

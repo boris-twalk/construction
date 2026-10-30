@@ -17,7 +17,7 @@
 
 `npm ci`與`npm run build`可從程式碼建立前端；`npx vitest run`執行35項一期工程核心測試。
 
-完整`npm test`另包含15項原廠資料／SQLite驗證測試；`review:prepare`、`review:server`及PDF頁面轉繪也依賴本次未公開提交的本機資料。請先由具有權限的維護者，透過組織允許的非公開管道提供Phase 2說明列出的原始PDF及擷取資料，並核對來源SHA-256。不要為了通過測試而將原廠資料提交到公開GitHub，也不要將缺檔測試改為跳過或虛構通過。
+`npm test`已改為獨立虛構資料測試。`npm run test:private`保留15項原廠資料／SQLite驗證測試；`review:prepare`、`review:server`及PDF頁面轉繪也依賴本次未公開提交的本機資料。請先由具有權限的維護者，透過組織允許的非公開管道提供Phase 2說明列出的原始PDF及擷取資料，並核對來源SHA-256。不要為了通過測試而將原廠資料提交到公開GitHub，獨立私有測試遇缺檔時明確回報SKIPPED / MISSING_PRIVATE_DATA（原有15項未執行），不得計為通過或更改原有斷言。
 
 本次提交前已在保有完整資料的工作區執行50項測試及正式建置；這不表示沒有原廠資料的全新checkout已通過完整測試。
 

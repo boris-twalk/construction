@@ -97,16 +97,17 @@ npm run dev
 
 ```sh
 npm test
+npm run test:private
 npm run build
 python3 scripts/validate-manufacturer.py
 ```
 
-`npm test` 執行35項Vitest工程核心測試及15項Node SQLite／資料驗證測試：全部26,114筆原始JSON/CSV欄位一致、baseline一致、頁表列欄及版本追溯、21筆半徑疑義、錯配置拒絕、未核對／未核准拒絕、原值保護、歷史追加、批次衝突回滾、空白null、重匯入不覆寫，以及未經歷史的直接更新拒絕。Node內建node:test直接執行檔案，會保留失敗exit code。
+`npm test` 現在執行工程核心、虛構 SQLite 及 HTTP API 測試；原有35項核心測試保留。`npm run test:private` 在授權資料完整時執行原有15項Node SQLite／原廠資料驗證測試：全部26,114筆原始JSON/CSV欄位一致、baseline一致、頁表列欄及版本追溯、21筆半徑疑義、錯配置拒絕、未核對／未核准拒絕、原值保護、歷史追加、批次衝突回滾、空白null、重匯入不覆寫，以及未經歷史的直接更新拒絕。Node內建node:test直接執行檔案，會保留失敗exit code。
 
 已另以環境提供的Playwright與系統Chromium完成瀏覽器操作測試，使用**獨立測試資料庫** `.local/load-chart-review-e2e.sqlite`：
 
 ```sh
-REVIEW_PORT=3002 REVIEW_DB_PATH=.local/load-chart-review-e2e.sqlite node server/index.mjs
+REVIEW_PORT=3002 REVIEW_DB_PATH=.local/load-chart-review-e2e.sqlite node server/start-review.mjs
 # 另一終端機；需可用的Playwright與Chromium（CHROMIUM_PATH可指定）
 node scripts/review-browser-smoke.cjs
 ```
@@ -114,3 +115,5 @@ node scripts/review-browser-smoke.cjs
 此腳本將5173介面的API請求轉至隔離3002 API，測試NEEDS_REVIEW／REJECTED篩選、確認前禁止儲存、單筆／批次操作、數字修正、歷史及重新整理持久化；測試數字不是原廠更正。不要將3002指向工作資料庫；可刪除該隔離測試檔後重跑。Playwright是目前環境提供的測試工具，不在package依賴內。
 
 目前工作資料庫初始化結果：26,114筆UNVERIFIED、VERIFIED=0、REJECTED=0、NEEDS_REVIEW=0；34張表皆UNAPPROVED。這是本次驗證時觀察，不保證之後人工操作仍維持零進度。
+
+最新獨立測試、無私有資料的 demo 及授權資料設定，請見 [Phase 2 測試與資料設定](phase2-test-data.md)。

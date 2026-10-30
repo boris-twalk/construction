@@ -43,3 +43,9 @@ UI 為記憶體示範，重新整理即重置；沒有連接 SQLite。`src/servi
 ## GitHub 分支保存範圍
 
 本分支不新增原廠PDF、擷取數據或本機SQLite。全新checkout的完整核對測試／啟動需要另以非公開方式還原資料，詳見 [公開提交範圍與重現限制](docs/github-publication.md)。本機資料及歷史不會因提交而刪除。
+
+## 獨立測試與 Phase 2 資料來源
+
+一般 `npm test` 使用完全虛構的 `SYNTHETIC_TEST_DATA`，不需要私有原廠資料。`npm run test:engineering`、`npm run test:db`、`npm run test:api` 可分別執行；原廠完整性驗證改用 `npm run test:private`，缺資料時明確略過，不代表通過。
+
+無私有資料時可執行 `npm run review:demo` 與 `npm run dev` 測試核對介面；資料不得用於工程吊裝計算。授權私有資料的路徑、格式、SHA-256 驗證及安全規則，請見 [Phase 2 測試與資料設定](docs/phase2-test-data.md)。

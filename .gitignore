@@ -15,3 +15,6 @@ __pycache__/
 docs/manufacturer/README.md
 docs/manufacturer/ltm1300-6-3/*
 !docs/manufacturer/ltm1300-6-3/capacity-candidate.schema.json
+
+# Authorized external review datasets belong here; never commit them.
+/private-data/

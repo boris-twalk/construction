@@ -1,8 +1,8 @@
 """Validate extraction integrity and quarantine, NOT engineering accuracy."""
-import json,csv,hashlib,collections
+import json,csv,hashlib,collections,os
 from pathlib import Path
 from decimal import Decimal
-p=Path('docs/manufacturer/ltm1300-6-3')
+p=Path(os.environ.get('REVIEW_DATA_DIR','docs/manufacturer/ltm1300-6-3'))
 m=json.loads((p/'manifest.json').read_text());cells=json.loads((p/'capacity-candidates.json').read_text());pages=json.loads((p/'source-pages.json').read_text());notes=json.loads((p/'notes.json').read_text());grids=json.loads((p/'raw-grid.json').read_text())
 assert len(pages)==60 and len(m['regions'])==34 and len(m['chart_pages'])==30
 assert len(cells)==m['counts']['review_cells']==26114
@@ -29,11 +29,12 @@ for region in m['regions']:
   canon=lambda ws:collections.Counter((w['text'],tuple(w['bbox_pt'])) for w in ws)
   assert canon(expected)==canon(actual),(region['id'],row[0]['data_row'])
 with (p/'manual-review.csv').open(encoding='utf-8-sig',newline='') as f:assert sum(1 for _ in csv.DictReader(f))==len(cells)
-source=Path('.local/manufacturer/300T-G.pdf')
-if source.exists():assert hashlib.sha256(source.read_bytes()).hexdigest()==m['source']['sha256']
+source=Path(os.environ.get('REVIEW_PDF_PATH','.local/manufacturer/300T-G.pdf'))
+assert source.exists(), 'MISSING_PRIVATE_DATA: source PDF'
+assert hashlib.sha256(source.read_bytes()).hexdigest()==m['source']['sha256']
 try:
  import jsonschema
- jsonschema.Draft202012Validator(json.loads((p/'capacity-candidate.schema.json').read_text())).validate(cells)
+ jsonschema.Draft202012Validator(json.loads((Path(__file__).resolve().parent.parent/'docs/manufacturer/ltm1300-6-3/capacity-candidate.schema.json').read_text())).validate(cells)
  print('JSON Schema validation PASS')
 except ImportError: print('jsonschema unavailable; structural checks above executed, JSON Schema check unrun')
 print('PASS: 60 pages, 30 chart pages / 34 matrices, 26114 review cells; token coverage, unit candidates, CSV parity, pending review gates; NOT a manual engineering verification')

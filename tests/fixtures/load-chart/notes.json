@@ -1,0 +1,8 @@
+[
+  {
+    "id": "SYNTHETIC-NOTE",
+    "pdf_page": 1,
+    "text": "SYNTHETIC_TEST_DATA: invented values, never for engineering use",
+    "data_class": "SYNTHETIC_TEST_DATA"
+  }
+]

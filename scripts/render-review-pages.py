@@ -1,10 +1,11 @@
 """Render source PDF pages for deterministic in-browser comparison; never OCR/modify values."""
 from pathlib import Path
-import hashlib,json
+import hashlib,json,os
 import fitz
 root=Path(__file__).resolve().parent.parent
-m=json.loads((root/'docs/manufacturer/ltm1300-6-3/manifest.json').read_text())
-pdf_path=root/'.local/manufacturer/300T-G.pdf'
+data=Path(os.environ.get('REVIEW_DATA_DIR',root/'docs/manufacturer/ltm1300-6-3'))
+m=json.loads((data/'manifest.json').read_text())
+pdf_path=Path(os.environ.get('REVIEW_PDF_PATH',root/'.local/manufacturer/300T-G.pdf'))
 assert hashlib.sha256(pdf_path.read_bytes()).hexdigest()==m['source']['sha256'],'PDF SHA-256 mismatch'
 output=root/'.local/manufacturer/review-pages'/m['source']['sha256'];output.mkdir(parents=True,exist_ok=True)
 pdf=fitz.open(pdf_path)

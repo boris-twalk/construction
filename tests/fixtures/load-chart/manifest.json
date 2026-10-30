@@ -1,0 +1,67 @@
+{
+  "source": {
+    "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    "commit": "synthetic-v1",
+    "model": "SYNTHETIC TEST FLEET",
+    "document_code_raw": "SYNTHETIC-v1",
+    "document_class": "SYNTHETIC_TEST_DATA",
+    "data_class": "SYNTHETIC_TEST_DATA"
+  },
+  "regions": [
+    {
+      "id": "SYNTHETIC-TRUCK",
+      "pdf_page": 1,
+      "family": "T",
+      "data_rows": 4,
+      "column_count": 1,
+      "counterweight_kg_candidate": 4000,
+      "columns": [
+        {
+          "data_class": "SYNTHETIC_TEST_DATA",
+          "model_id": "SYNTHETIC-TRUCK",
+          "crane_type": "TRUCK",
+          "main_boom_length_mm_candidate": 18000,
+          "outrigger_geometry_mm": [
+            6000,
+            6000
+          ],
+          "slew_sector_candidate": "360",
+          "support": "OUTRIGGERS",
+          "header_raw": "SYNTHETIC_TEST_DATA SYNTHETIC-TRUCK"
+        }
+      ],
+      "data_class": "SYNTHETIC_TEST_DATA",
+      "configuration_header_raw": "SYNTHETIC_TEST_DATA: invented configuration, not approved"
+    },
+    {
+      "id": "SYNTHETIC-ALL_TERRAIN",
+      "pdf_page": 2,
+      "family": "T",
+      "data_rows": 4,
+      "column_count": 1,
+      "counterweight_kg_candidate": 12000,
+      "columns": [
+        {
+          "data_class": "SYNTHETIC_TEST_DATA",
+          "model_id": "SYNTHETIC-AT",
+          "crane_type": "ALL_TERRAIN",
+          "main_boom_length_mm_candidate": 26000,
+          "outrigger_geometry_mm": [
+            6000,
+            6000
+          ],
+          "slew_sector_candidate": "360",
+          "support": "OUTRIGGERS",
+          "header_raw": "SYNTHETIC_TEST_DATA SYNTHETIC-ALL_TERRAIN"
+        }
+      ],
+      "data_class": "SYNTHETIC_TEST_DATA",
+      "configuration_header_raw": "SYNTHETIC_TEST_DATA: invented configuration, not approved"
+    }
+  ],
+  "chart_pages": [
+    1,
+    2
+  ],
+  "data_class": "SYNTHETIC_TEST_DATA"
+}

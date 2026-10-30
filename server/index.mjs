@@ -1,16 +1,16 @@
 import {createServer} from 'node:http';
-import {createReadStream,mkdirSync} from 'node:fs';
-import {openStore,importCandidates,review,listTables,readArtifact,root} from './review-store.mjs';
-mkdirSync(new URL('.local/',root),{recursive:true});
-const db=openStore(new URL(process.env.REVIEW_DB_PATH??'.local/load-chart-review.sqlite',root).pathname);console.log(importCandidates(db));
+import {createReadStream,existsSync} from 'node:fs';
+import {join} from 'node:path';
+import {review,listTables} from './review-store.mjs';
 const send=(res,status,data)=>{res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});res.end(JSON.stringify(data));};
+export function createReviewServer({db,source}) {
 const server=createServer(async(req,res)=>{try{
  const url=new URL(req.url,'http://localhost');
  const preview=/^\/api\/review\/pages\/(\d+)\.png$/.exec(url.pathname);
- if(req.method==='GET'&&preview){const manifest=readArtifact('manifest.json');const page=Number(preview[1]);if(!manifest.chart_pages.includes(page))return send(res,404,{error:'無此負載表頁'});res.writeHead(200,{'Content-Type':'image/png','Cache-Control':'private, max-age=3600'});createReadStream(new URL('.local/manufacturer/review-pages/'+manifest.source.sha256+'/page-'+page+'.png',root)).on('error',()=>res.destroy()).pipe(res);return;}
- if(req.method==='GET'&&url.pathname==='/api/review/source.pdf'){res.writeHead(200,{'Content-Type':'application/pdf','Cache-Control':'private, max-age=3600'});createReadStream(new URL('.local/manufacturer/300T-G.pdf',root)).pipe(res);return;}
- if(req.method==='GET'&&url.pathname==='/api/review/tables')return send(res,200,{tables:listTables(db),source:readArtifact('manifest.json').source});
- if(req.method==='GET'&&url.pathname==='/api/review/notes')return send(res,200,readArtifact('notes.json'));
+ if(req.method==='GET'&&preview){const manifest=source.manifest;const page=Number(preview[1]);if(!source.previewDirectory||!manifest.chart_pages.includes(page)||!existsSync(join(source.previewDirectory,'page-'+page+'.png')))return send(res,404,{error:'無此負載表頁'});res.writeHead(200,{'Content-Type':'image/png','Cache-Control':'private, max-age=3600'});createReadStream(join(source.previewDirectory,'page-'+page+'.png')).on('error',()=>res.destroy()).pipe(res);return;}
+ if(req.method==='GET'&&url.pathname==='/api/review/source.pdf'){if(!source.pdfPath)return send(res,404,{error:'SYNTHETIC_TEST_DATA has no manufacturer PDF'});res.writeHead(200,{'Content-Type':'application/pdf','Cache-Control':'private, max-age=3600'});createReadStream(source.pdfPath).on('error',()=>res.destroy()).pipe(res);return;}
+ if(req.method==='GET'&&url.pathname==='/api/review/tables')return send(res,200,{tables:listTables(db),source:source.manifest.source,data_class:source.synthetic?'SYNTHETIC_TEST_DATA':'PRIVATE_REVIEW_DATA'});
+ if(req.method==='GET'&&url.pathname==='/api/review/notes')return send(res,200,source.notes);
  if(req.method==='GET'&&url.pathname==='/api/review/entries'){
  const table=url.searchParams.get('table');if(!table)return send(res,400,{error:'缺少表格'});
  const where=['table_id=?'];const args=[table];const status=url.searchParams.get('status');if(status&&status!=='ALL'){if(!['UNVERIFIED','VERIFIED','REJECTED','NEEDS_REVIEW'].includes(status))return send(res,400,{error:'無效狀態'});where.push('status=?');args.push(status);}
@@ -26,5 +26,5 @@ const server=createServer(async(req,res)=>{try{
  let body='';for await(const chunk of req){body+=chunk;if(body.length>200000)return send(res,413,{error:'批次過大'});}return send(res,200,review(db,JSON.parse(body)));}
  send(res,404,{error:'不存在的API'});
  }catch(e){send(res,400,{error:e instanceof Error?e.message:'請求失敗'});}});
-server.listen(Number(process.env.REVIEW_PORT)||3001,'127.0.0.1',()=>console.log('Review API ready on port '+server.address().port));
-for(const signal of ['SIGINT','SIGTERM'])process.on(signal,()=>server.close(()=>{db.close();process.exit(0);}));
+return server;
+}
