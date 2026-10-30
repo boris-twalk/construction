@@ -1,0 +1,17 @@
+node_modules/
+dist/
+*.tsbuildinfo
+.local/
+
+# Keep source documents, extracted manufacturer values and local review state private.
+*.pdf
+*.sqlite
+*.sqlite-*
+*.db
+.env
+.env.*
+__pycache__/
+*.pyc
+docs/manufacturer/README.md
+docs/manufacturer/ltm1300-6-3/*
+!docs/manufacturer/ltm1300-6-3/capacity-candidate.schema.json

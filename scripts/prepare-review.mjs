@@ -1,0 +1,9 @@
+import {writeFileSync} from 'node:fs';
+import {readArtifact,artifacts,priorities} from '../server/review-store.mjs';
+import {toCsv} from '../server/csv.mjs';
+const m=readArtifact('manifest.json'),entries=readArtifact('capacity-candidates.json');const regions=new Map(m.regions.map(r=>[r.id,r]));
+const rows=entries.map(e=>({id:e.id,table_id:e.table_id,configuration_id:e.table_id+'-C'+e.data_column,source_sha256:m.source.sha256,document_version:m.source.document_code_raw,pdf_page:e.pdf_page,data_row:e.data_row,data_column:e.data_column,bbox_pt:e.bbox_pt,radius_raw:e.radius_raw,capacity_raw:e.capacity_raw,radius_mm_candidate:e.radius_mm_candidate,main_boom_length_mm_candidate:e.main_boom_length_mm_candidate,capacity_kg_candidate:e.capacity_kg_candidate,status:'UNVERIFIED',corrected:null,reviewer:null,reviewed_at:null,reason:null,approved:false,priorities:priorities(e,regions.get(e.table_id))}));
+writeFileSync(new URL('review-baseline.json',artifacts),JSON.stringify(rows,null,2)+'\n');
+const fields=Object.keys(rows[0]);writeFileSync(new URL('review-baseline.csv',artifacts),toCsv([fields,...rows.map(r=>fields.map(k=>r[k]))]));
+const issueSummary={total:rows.length,initial_status:'UNVERIFIED',manually_verified:0,approved:0,priority_counts:Object.fromEntries([...new Set(rows.flatMap(r=>r.priorities))].map(p=>[p,rows.filter(r=>r.priorities.includes(p)).length])),urgent_rows:rows.filter(r=>r.priorities.includes('P34_RADIUS_MISMATCH')).map(r=>({id:r.id,pdf_page:r.pdf_page,data_row:r.data_row,data_column:r.data_column,bbox_pt:r.bbox_pt,raw_radius:r.radius_raw,reason:'左右半徑文字不一致，半徑候選留空'})),release_blockers:['型錄僅供一般資訊，未取得實車正式操作手冊與負載表冊','支腿展伸、逐格底色對應配重半徑及特殊設備未核對','VERIFIED不等於正式核准；無發布端點']};
+writeFileSync(new URL('priority-review.json',artifacts),JSON.stringify(issueSummary,null,2)+'\n');console.log({rows:rows.length,files:['review-baseline.json','review-baseline.csv','priority-review.json']});

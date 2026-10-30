@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Quarantined crane capacity candidates — NEVER operational charts",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": [
+      "id",
+      "table_id",
+      "pdf_page",
+      "data_row",
+      "data_column",
+      "radius_mm_candidate",
+      "main_boom_length_mm_candidate",
+      "capacity_raw",
+      "capacity_kg_candidate",
+      "value_kind",
+      "bbox_pt",
+      "status",
+      "reviewer",
+      "reviewed_at",
+      "approved",
+      "eligible_for_capacity_lookup"
+    ],
+    "properties": {
+      "id": {
+        "type": "string"
+      },
+      "table_id": {
+        "type": "string"
+      },
+      "pdf_page": {
+        "type": "integer",
+        "minimum": 1,
+        "maximum": 60
+      },
+      "data_row": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "data_column": {
+        "type": "integer",
+        "minimum": 1
+      },
+      "radius_mm_candidate": {
+        "type": [
+          "integer",
+          "null"
+        ],
+        "minimum": 1
+      },
+      "main_boom_length_mm_candidate": {
+        "type": [
+          "integer",
+          "null"
+        ],
+        "minimum": 1
+      },
+      "capacity_kg_candidate": {
+        "type": [
+          "integer",
+          "null"
+        ],
+        "minimum": 1
+      },
+      "capacity_raw": {
+        "type": "string"
+      },
+      "value_kind": {
+        "enum": [
+          "NUMERIC_CANDIDATE",
+          "BLANK",
+          "AMBIGUOUS"
+        ]
+      },
+      "bbox_pt": {
+        "type": "array",
+        "items": {
+          "type": "number"
+        },
+        "minItems": 4,
+        "maxItems": 4
+      },
+      "status": {
+        "const": "PENDING_MANUAL_REVIEW"
+      },
+      "reviewer": {
+        "type": "null"
+      },
+      "reviewed_at": {
+        "type": "null"
+      },
+      "approved": {
+        "const": false
+      },
+      "eligible_for_capacity_lookup": {
+        "const": false
+      }
+    }
+  }
+}
